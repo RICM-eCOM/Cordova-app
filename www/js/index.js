@@ -51,6 +51,33 @@ var app = {
            
         }).addTo(map);
         var marker = L.marker([position.coords.latitude, position.coords.longitude]).addTo(map);
+
+        //sendRequest
+        var xhr = new XMLHttpRequest();
+        //todo encodage
+        //var value1 = encodeURIComponent(value1),
+        //var value2 = encodeURIComponent(value2);
+        //this.sendRequest();
+        xhr.open('GET', 'https://data.metromobilite.fr/api/lines/json?types=ligne&codes=SEM_C1');
+        xhr.send(null);
+        xhr.addEventListener('readystatechange', function() {
+            if (xhr.readyState === 4) {
+                //alert('fichier recu');
+                var response = JSON.parse(xhr.responseText);
+                //alert('response'+xhr.response);
+                //alert('responseTEXT'+xhr.responseText);
+                //alert('responseType'+xhr.responseType);
+                var myStyle = {
+                    "color": "#ff7800",
+                    "weight": 1,
+                    "opacity": 1
+                };
+                var myLayer = L.geoJSON(response,{
+                    style: myStyle}).addTo(map);
+            }
+        });
+
+        //end sendResquest
     },
     
     // onError Callback receives a PositionError object
