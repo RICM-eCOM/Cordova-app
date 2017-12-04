@@ -50,34 +50,42 @@ var app = {
             accessToken: config.accessToken
            
         }).addTo(map);
-        var marker = L.marker([position.coords.latitude, position.coords.longitude]).addTo(map);
-
+        marker = L.marker([position.coords.latitude, position.coords.longitude]).addTo(map);
+        var x = 0;
+        var xhr;
         //sendRequest
-        var xhr = new XMLHttpRequest();
+        xhr = new XMLHttpRequest();
         //todo encodage
         //var value1 = encodeURIComponent(value1),
         //var value2 = encodeURIComponent(value2);
         //this.sendRequest();
         xhr.open('GET', 'https://data.metromobilite.fr/api/lines/json?types=ligne&codes=SEM_C1');
         xhr.send(null);
-        xhr.addEventListener('readystatechange', function() {
-            if (xhr.readyState === 4) {
+        // end sendRequest
+        xhr.addEventListener('readystatechange', function(){
+            if (xhr.readyState === 4){
+                //alert('xhr.readyState'+xhr.readyState);
                 //alert('fichier recu');
-                var response = JSON.parse(xhr.responseText);
-                //alert('response'+xhr.response);
-                //alert('responseTEXT'+xhr.responseText);
-                //alert('responseType'+xhr.responseType);
+                response = JSON.parse(xhr.responseText);
+                //alert('response geo test'+response.features["0"].geometry.coordinates);
+                for(elem of response.features["0"].geometry.coordinates["0"] ){
+                    //alert ('elem x = '+elem[0]);
+                    //alert ('elem y = '+elem[1]);
+                    //marker = L.marker(elem).addTo(map);
+                    if (x%10 === 0){
+                        markers = L.marker([elem[1],elem[0]]).addTo(map);
+                    }
+                    x++;
+                }
                 var myStyle = {
                     "color": "#ff7800",
-                    "weight": 1,
+                    "weight": 10,
                     "opacity": 1
                 };
                 var myLayer = L.geoJSON(response,{
                     style: myStyle}).addTo(map);
             }
         });
-
-        //end sendResquest
     },
     
     // onError Callback receives a PositionError object
@@ -93,6 +101,10 @@ var app = {
     onDeviceReady: function() {
         //this.receivedEvent('deviceready');
         var map;
+        var response;
+        var marker;
+        var markers;
+        //this.sendRequest();
         var watchID = navigator.geolocation.watchPosition(this.onSuccess, this.onError, { timeout: 10000,enableHighAccuracy: true});
     },
     
