@@ -62,6 +62,20 @@ var app = {
         xhr.open('GET', 'https://data.metromobilite.fr/api/lines/json?types=ligne&codes=SEM_C1');
         xhr.send(null);
         // end sendRequest
+
+        //option 1
+        /*
+
+        var checkPointIcon = L.icon({
+            iconUrl: '/img/LogoMesCourses.png',
+            //shadowUrl: '',
+            iconSize:     [38, 95], // size of the icon
+            //shadowSize:   [50, 64], // size of the shadow
+            //iconAnchor:   [22, 94], // point of the icon which will correspond to marker's location
+            //shadowAnchor: [4, 62],  // the same for the shadow
+            //popupAnchor:  [-3, -76] // point from which the popup should open relative to the iconAnchor
+        });
+        */
         xhr.addEventListener('readystatechange', function(){
             if (xhr.readyState === 4){
                 //alert('xhr.readyState'+xhr.readyState);
@@ -73,7 +87,15 @@ var app = {
                     //alert ('elem y = '+elem[1]);
                     //marker = L.marker(elem).addTo(map);
                     if (x%10 === 0){
-                        markers = L.marker([elem[1],elem[0]]).addTo(map);
+                        //markers = L.marker([elem[1],elem[0]], {icon: checkPointIcon}).addTo(map);
+
+                        //option 2
+                        var circle = L.circle([elem[1],elem[0]], {
+                        color: 'red',
+                        fillColor: '#f03',
+                        fillOpacity: 1,
+                        radius: 50
+        }).addTo(map);
                     }
                     x++;
                 }
