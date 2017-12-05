@@ -76,6 +76,15 @@ var app = {
             //popupAnchor:  [-3, -76] // point from which the popup should open relative to the iconAnchor
         });
         */
+        var circle = [];
+        var popup = L.popup();
+        var tpsEstime = [10,20,30];
+        function onCircleClick(e) {
+            popup
+                .setLatLng(e.latlng)
+                .setContent("You clicked the checkpoint tps estime : "+tpsEstime[0])
+                .openOn(map);
+        }
         xhr.addEventListener('readystatechange', function(){
             if (xhr.readyState === 4){
                 //alert('xhr.readyState'+xhr.readyState);
@@ -86,16 +95,18 @@ var app = {
                     //alert ('elem x = '+elem[0]);
                     //alert ('elem y = '+elem[1]);
                     //marker = L.marker(elem).addTo(map);
+                    circle[x] = 0;
                     if (x%10 === 0){
                         //markers = L.marker([elem[1],elem[0]], {icon: checkPointIcon}).addTo(map);
 
                         //option 2
-                        var circle = L.circle([elem[1],elem[0]], {
+                        circle[x] = L.circle([elem[1],elem[0]], {
                         color: 'red',
                         fillColor: '#f03',
                         fillOpacity: 1,
                         radius: 50
-        }).addTo(map);
+                        }).addTo(map);
+                        circle[x].on('click', onCircleClick);
                     }
                     x++;
                 }
